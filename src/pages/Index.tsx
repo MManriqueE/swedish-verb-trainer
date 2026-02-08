@@ -1,13 +1,35 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { HomeScreen } from '@/components/HomeScreen';
+import { PracticeScreen } from '@/components/PracticeScreen';
+import { Tense } from '@/data/verbs';
+
+type Screen = 'home' | 'practice';
 
 const Index = () => {
+  const [screen, setScreen] = useState<Screen>('home');
+  const [selectedTense, setSelectedTense] = useState<Tense>('presens');
+
+  const handleStart = (tense: Tense) => {
+    setSelectedTense(tense);
+    setScreen('practice');
+  };
+
+  const handleBack = () => {
+    setScreen('home');
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {screen === 'home' && (
+        <HomeScreen onStart={handleStart} />
+      )}
+      {screen === 'practice' && (
+        <PracticeScreen 
+          initialTense={selectedTense} 
+          onBack={handleBack} 
+        />
+      )}
+    </>
   );
 };
 
