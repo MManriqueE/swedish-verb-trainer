@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { TenseCard } from '@/components/TenseCard';
 import { Tense } from '@/data/verbs';
-import { Play, BookOpen } from 'lucide-react';
+import { Play, BookOpen, Library } from 'lucide-react';
 
 interface HomeScreenProps {
   onStart: (tense: Tense) => void;
+  onOpenVerbs: () => void;
 }
 
 const tenses: Tense[] = ['presens', 'preteritum', 'perfekt', 'futurum', 'imperativ', 'alla'];
 
-export function HomeScreen({ onStart }: HomeScreenProps) {
+export function HomeScreen({ onStart, onOpenVerbs }: HomeScreenProps) {
   const [selectedTense, setSelectedTense] = useState<Tense>('presens');
 
   return (
@@ -47,8 +48,8 @@ export function HomeScreen({ onStart }: HomeScreenProps) {
           </div>
         </div>
 
-        {/* Start Button */}
-        <div className="flex justify-center">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button 
             size="xl" 
             onClick={() => onStart(selectedTense)}
@@ -57,11 +58,20 @@ export function HomeScreen({ onStart }: HomeScreenProps) {
             <Play className="mr-2 w-6 h-6" />
             Start Practice
           </Button>
+          <Button 
+            variant="outline"
+            size="xl" 
+            onClick={onOpenVerbs}
+            className="min-w-[200px]"
+          >
+            <Library className="mr-2 w-5 h-5" />
+            View Verbs
+          </Button>
         </div>
 
         {/* Footer */}
         <p className="text-center text-sm text-muted-foreground">
-          25 common verbs • Instant feedback • Track your progress
+          100+ verbs • Instant feedback • Track your progress
         </p>
       </div>
     </div>
