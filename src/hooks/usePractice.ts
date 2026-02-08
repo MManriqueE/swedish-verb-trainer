@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Tense, PracticeTense, VerbConjugation, getRandomVerb, getRandomVerbExcluding, getRandomPracticeTense } from '@/data/verbs';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 
 export interface PracticeState {
   currentVerb: VerbConjugation;
@@ -18,6 +19,8 @@ function getInitialPracticeTense(tense: Tense): PracticeTense {
 }
 
 export function usePractice(initialTense: Tense) {
+  const { playCorrectSound, playIncorrectSound } = useSoundEffects();
+  
   const [state, setState] = useState<PracticeState>(() => ({
     currentVerb: getRandomVerb(),
     selectedTense: initialTense,
@@ -35,6 +38,13 @@ export function usePractice(initialTense: Tense) {
     const userAnswerNormalized = state.userAnswer.toLowerCase().trim();
     const isCorrect = userAnswerNormalized === correctAnswer;
 
+    // Play sound effect
+    if (isCorrect) {
+      playCorrectSound();
+    } else {
+      playIncorrectSound();
+    }
+
     setState(prev => ({
       ...prev,
       isAnswered: true,
@@ -43,7 +53,7 @@ export function usePractice(initialTense: Tense) {
       totalCorrect: isCorrect ? prev.totalCorrect + 1 : prev.totalCorrect,
       totalAnswered: prev.totalAnswered + 1,
     }));
-  }, [state.currentVerb, state.currentPracticeTense, state.userAnswer]);
+  }, [state.currentVerb, state.currentPracticeTense, state.userAnswer, playCorrectSound, playIncorrectSound]);
 
   const nextQuestion = useCallback(() => {
     setState(prev => ({
