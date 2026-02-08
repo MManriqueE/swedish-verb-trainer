@@ -16,6 +16,7 @@ export function PracticeScreen({ initialTense, onBack }: PracticeScreenProps) {
   const {
     currentVerb,
     selectedTense,
+    currentPracticeTense,
     userAnswer,
     isAnswered,
     isCorrect,
@@ -29,8 +30,8 @@ export function PracticeScreen({ initialTense, onBack }: PracticeScreenProps) {
     resetProgress,
   } = usePractice(initialTense);
 
-  const correctAnswer = currentVerb[selectedTense];
-  const tense = tenseInfo[selectedTense];
+  const correctAnswer = currentVerb[currentPracticeTense];
+  const tense = tenseInfo[currentPracticeTense];
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted/30">
@@ -70,7 +71,7 @@ export function PracticeScreen({ initialTense, onBack }: PracticeScreenProps) {
       <main className="flex-1 flex flex-col items-center justify-center p-6 gap-8">
         <div className="w-full max-w-md space-y-8">
           {/* Verb Prompt */}
-          <VerbPrompt verb={currentVerb} tense={selectedTense} />
+          <VerbPrompt verb={currentVerb} tense={currentPracticeTense} />
 
           {/* Answer Input */}
           <AnswerInput

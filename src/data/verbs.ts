@@ -1,4 +1,11 @@
-export type Tense = 'presens' | 'preteritum' | 'perfekt' | 'futurum' | 'imperativ';
+export type Tense = 'presens' | 'preteritum' | 'perfekt' | 'futurum' | 'imperativ' | 'alla';
+export type PracticeTense = Exclude<Tense, 'alla'>;
+
+export const practiceTenses: PracticeTense[] = ['presens', 'preteritum', 'perfekt', 'futurum', 'imperativ'];
+
+export function getRandomPracticeTense(): PracticeTense {
+  return practiceTenses[Math.floor(Math.random() * practiceTenses.length)];
+}
 
 export interface VerbConjugation {
   infinitive: string;
@@ -264,6 +271,11 @@ export const tenseInfo: Record<Tense, { name: string; description: string; emoji
     name: "Imperativ",
     description: "Imperative",
     emoji: "👆",
+  },
+  alla: {
+    name: "Alla",
+    description: "Mixed practice",
+    emoji: "🔀",
   },
 };
 

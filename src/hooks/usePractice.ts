@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
-import { Tense, VerbConjugation, getRandomVerb, getRandomVerbExcluding } from '@/data/verbs';
+import { Tense, PracticeTense, VerbConjugation, getRandomVerb, getRandomVerbExcluding, getRandomPracticeTense } from '@/data/verbs';
 
 export interface PracticeState {
   currentVerb: VerbConjugation;
   selectedTense: Tense;
+  currentPracticeTense: PracticeTense;
   userAnswer: string;
   isAnswered: boolean;
   isCorrect: boolean | null;
@@ -12,20 +13,25 @@ export interface PracticeState {
   totalAnswered: number;
 }
 
+function getInitialPracticeTense(tense: Tense): PracticeTense {
+  return tense === 'alla' ? getRandomPracticeTense() : tense;
+}
+
 export function usePractice(initialTense: Tense) {
-  const [state, setState] = useState<PracticeState>({
+  const [state, setState] = useState<PracticeState>(() => ({
     currentVerb: getRandomVerb(),
     selectedTense: initialTense,
+    currentPracticeTense: getInitialPracticeTense(initialTense),
     userAnswer: '',
     isAnswered: false,
     isCorrect: null,
     streak: 0,
     totalCorrect: 0,
     totalAnswered: 0,
-  });
+  }));
 
   const checkAnswer = useCallback(() => {
-    const correctAnswer = state.currentVerb[state.selectedTense].toLowerCase().trim();
+    const correctAnswer = state.currentVerb[state.currentPracticeTense].toLowerCase().trim();
     const userAnswerNormalized = state.userAnswer.toLowerCase().trim();
     const isCorrect = userAnswerNormalized === correctAnswer;
 
@@ -37,12 +43,13 @@ export function usePractice(initialTense: Tense) {
       totalCorrect: isCorrect ? prev.totalCorrect + 1 : prev.totalCorrect,
       totalAnswered: prev.totalAnswered + 1,
     }));
-  }, [state.currentVerb, state.selectedTense, state.userAnswer]);
+  }, [state.currentVerb, state.currentPracticeTense, state.userAnswer]);
 
   const nextQuestion = useCallback(() => {
     setState(prev => ({
       ...prev,
       currentVerb: getRandomVerbExcluding(prev.currentVerb.infinitive),
+      currentPracticeTense: prev.selectedTense === 'alla' ? getRandomPracticeTense() : prev.selectedTense,
       userAnswer: '',
       isAnswered: false,
       isCorrect: null,
@@ -57,6 +64,7 @@ export function usePractice(initialTense: Tense) {
     setState(prev => ({
       ...prev,
       selectedTense: tense,
+      currentPracticeTense: tense === 'alla' ? getRandomPracticeTense() : tense,
       currentVerb: getRandomVerb(),
       userAnswer: '',
       isAnswered: false,
@@ -71,6 +79,7 @@ export function usePractice(initialTense: Tense) {
       totalCorrect: 0,
       totalAnswered: 0,
       currentVerb: getRandomVerb(),
+      currentPracticeTense: prev.selectedTense === 'alla' ? getRandomPracticeTense() : prev.selectedTense,
       userAnswer: '',
       isAnswered: false,
       isCorrect: null,
