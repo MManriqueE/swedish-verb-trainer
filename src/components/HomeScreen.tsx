@@ -8,7 +8,7 @@ interface HomeScreenProps {
   onStart: (tense: Tense) => void;
 }
 
-const tenses: Tense[] = ['presens', 'preteritum', 'perfekt', 'futurum', 'imperativ'];
+const tenses: Tense[] = ['presens', 'preteritum', 'perfekt', 'futurum', 'imperativ', 'alla'];
 
 export function HomeScreen({ onStart }: HomeScreenProps) {
   const [selectedTense, setSelectedTense] = useState<Tense>('presens');
